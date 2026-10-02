@@ -95,7 +95,7 @@ export function DepositPanel({
                   inputMode="decimal"
                   placeholder="0.00"
                   aria-label={`Amount in ${token?.symbol ?? 'tokens'}`}
-                  className="h-24 pr-48 pl-5 text-5xl font-semibold tabular-nums"
+                  className="h-24 pr-28 pb-6 pl-5 text-5xl font-semibold tabular-nums"
                   value={amountText}
                   disabled={busy}
                   onChange={e => {
@@ -104,20 +104,22 @@ export function DepositPanel({
                   }}
                 />
                 {wallet.address && token && (
-                  <div className="absolute inset-y-0 right-4 flex items-center gap-3">
-                    <span className="text-sm text-muted-foreground">
+                  <>
+                    <span className="pointer-events-none absolute bottom-3 left-5 text-sm text-muted-foreground">
                       Balance {formatTokenAmount(balance, token.decimals)} {token.symbol}
                     </span>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      disabled={busy || !spendable}
-                      onClick={() => spendable !== undefined && setAmountText(formatPlain(spendable, token.decimals))}
-                      className="transition-opacity pointer-fine:opacity-0 pointer-fine:group-focus-within/amount:opacity-100 pointer-fine:group-hover/amount:opacity-100"
-                    >
-                      Max
-                    </Button>
-                  </div>
+                    <div className="absolute inset-y-0 right-4 flex items-center">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={busy || !spendable}
+                        onClick={() => spendable !== undefined && setAmountText(formatPlain(spendable, token.decimals))}
+                        className="transition-opacity pointer-fine:opacity-0 pointer-fine:group-focus-within/amount:opacity-100 pointer-fine:group-hover/amount:opacity-100"
+                      >
+                        Max
+                      </Button>
+                    </div>
+                  </>
                 )}
               </div>
             </Field>
