@@ -1,7 +1,6 @@
 import type { LeverageYieldVault, XToken } from '@sodax/types';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Callout } from '@/components/ui/callout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
@@ -12,11 +11,11 @@ import {
   type SourceChainKey,
 } from '@/config/workshop';
 import { chainName } from '@/lib/chains';
-import { formatBps, formatTokenAmount, parseTokenAmount } from '@/lib/format';
+import { formatTokenAmount, parseTokenAmount } from '@/lib/format';
 import { useEvmWallet } from '@/wallet';
 import { HUB_CHAIN, useShareHoldings, useTokenBalance, useVaultDeposit, useVaultQuote } from './hooks';
 import { errorMessage, isNativeToken, SHARE_DECIMALS } from './lib';
-import { ChainSelect, Field, FlowSteps, Row, TokenSelect } from './parts';
+import { ChainSelect, Field, FlowSteps, TokenSelect } from './parts';
 
 export function DepositPanel({
   vault,
@@ -104,7 +103,9 @@ export function DepositPanel({
         >
           <Input
             inputMode="decimal"
-            placeholder="5.00"
+            placeholder="0.00"
+            aria-label={`Amount in ${token?.symbol ?? 'tokens'}`}
+            className="h-24 px-5 text-5xl font-semibold tabular-nums"
             value={amountText}
             disabled={busy}
             onChange={e => {
@@ -114,35 +115,14 @@ export function DepositPanel({
           />
         </Field>
 
-        <div className="flex flex-col gap-2 rounded-md border bg-secondary p-3">
-          <Row
-            label="You receive (est.)"
-            strong
-            value={quoteValue(quote.hasPayload, quote.isFetching, quote.quoted, `${vault.name}`)}
-          />
-          <Row
-            label={`Minimum (${formatBps(DEFAULT_SLIPPAGE_BPS)} slippage)`}
-            value={quoteValue(quote.hasPayload, quote.isFetching, quote.minimum, vault.name)}
-          />
-          <Row label="Delivered to" value={`Hub wallet on ${chainName(HUB_CHAIN)}`} />
-          {quote.error !== undefined && quote.error !== null && quote.hasPayload && (
-            <div className="flex items-center justify-between gap-2 text-sm text-destructive">
-              <span>{errorMessage(quote.error, 'Quote failed')}</span>
-              <Button size="sm" variant="ghost" onClick={() => quote.refetch()}>
-                Retry
-              </Button>
-            </div>
-          )}
-        </div>
-
-        {wallet.address && holdings.total > 0n && (
-          <Row label={`Your ${vault.name}`} value={formatTokenAmount(holdings.total, SHARE_DECIMALS)} />
+        {quote.error !== undefined && quote.error !== null && quote.hasPayload && (
+          <div className="flex items-center justify-between gap-2 text-sm text-destructive">
+            <span>{errorMessage(quote.error, 'Quote failed')}</span>
+            <Button size="sm" variant="ghost" onClick={() => quote.refetch()}>
+              Retry
+            </Button>
+          </div>
         )}
-
-        <Callout className="text-xs leading-relaxed">
-          Real funds on mainnet. This vault is leveraged (health factor around 1.2): the APR is variable and can turn
-          negative, and the share price can fall. You exit only by withdrawing.
-        </Callout>
 
         {!wallet.isConnected ? (
           <Button size="lg" onClick={wallet.connect}>
@@ -179,7 +159,7 @@ export function DepositPanel({
   );
 }
 
-function quoteValue(hasPayload: boolean, fetching: boolean, value: bigint | undefined, unit: string) {
+function _quoteValue(hasPayload: boolean, fetching: boolean, value: bigint | undefined, unit: string) {
   if (!hasPayload) return '–';
   if (fetching && value === undefined) return 'Quoting…';
   return value !== undefined ? `${formatTokenAmount(value, SHARE_DECIMALS)} ${unit}` : '–';
