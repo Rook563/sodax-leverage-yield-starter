@@ -2,7 +2,6 @@ import type { SpokeChainKey, XToken } from '@sodax/types';
 import { CheckCircle2Icon, CircleIcon, ExternalLinkIcon, Loader2Icon, XCircleIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Callout } from '@/components/ui/callout';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getDepositTokens, SOURCE_CHAINS, type SourceChainKey } from '@/config/workshop';
 import { chainLogo, chainName, explorerTxUrl } from '@/lib/chains';
 import { cn } from '@/lib/utils';
@@ -23,21 +22,36 @@ export function Field({ label, children, hint }: { label: string; children: Reac
 
 export function ChainSelect({ value, onChange }: { value: SourceChainKey; onChange: (chain: SourceChainKey) => void }) {
   return (
-    <Select value={value} onValueChange={v => onChange(v as SourceChainKey)}>
-      <SelectTrigger aria-label="Network" className="h-9 w-auto min-w-40 self-start text-sm">
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
-        {SOURCE_CHAINS.map(chain => (
-          <SelectItem key={chain} value={chain}>
-            <span className="flex items-center gap-2">
-              {chainLogo(chain) && <img src={chainLogo(chain)} alt="" className="size-5 rounded-md" />}
-              {chainName(chain)}
+    <fieldset aria-label="Network" className="-m-1.5 flex flex-wrap">
+      {SOURCE_CHAINS.map(chain => {
+        const active = chain === value;
+        const logo = chainLogo(chain);
+        return (
+          <button
+            key={chain}
+            type="button"
+            aria-pressed={active}
+            aria-label={chainName(chain)}
+            title={chainName(chain)}
+            onClick={() => onChange(chain)}
+            className="group p-1.5 focus-visible:outline-none"
+          >
+            <span
+              className={cn(
+                'flex size-16 items-center justify-center rounded-2xl border-2 border-foreground transition-colors group-focus-visible:ring-2 group-focus-visible:ring-ring',
+                active ? 'bg-foreground' : 'border-dashed bg-card group-hover:border-solid',
+              )}
+            >
+              {logo ? (
+                <img src={logo} alt="" className={cn('size-7 rounded-md grayscale', active && 'invert')} />
+              ) : (
+                <span className={cn('text-xs font-semibold', active && 'text-background')}>{chainName(chain)}</span>
+              )}
             </span>
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+          </button>
+        );
+      })}
+    </fieldset>
   );
 }
 
