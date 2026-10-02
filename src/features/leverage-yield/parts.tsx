@@ -24,7 +24,7 @@ export function Field({ label, children, hint }: { label: string; children: Reac
 export function ChainSelect({ value, onChange }: { value: SourceChainKey; onChange: (chain: SourceChainKey) => void }) {
   return (
     <Select value={value} onValueChange={v => onChange(v as SourceChainKey)}>
-      <SelectTrigger aria-label="Network">
+      <SelectTrigger aria-label="Network" className="h-9 w-auto min-w-40 self-start text-sm">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
@@ -52,24 +52,31 @@ export function TokenSelect({
 }) {
   const tokens = getDepositTokens(chainKey);
   return (
-    <Select
-      value={value?.address}
-      onValueChange={address => {
-        const token = tokens.find(t => t.address === address);
-        if (token) onChange(token);
-      }}
-    >
-      <SelectTrigger aria-label="Token">
-        <SelectValue placeholder="Pick a token" />
-      </SelectTrigger>
-      <SelectContent>
-        {tokens.map(token => (
-          <SelectItem key={token.address} value={token.address}>
-            {token.symbol}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <fieldset aria-label="Token" className="-m-1.5 flex flex-wrap">
+      {tokens.map(token => {
+        const active = token.address === value?.address;
+        return (
+          <button
+            key={token.address}
+            type="button"
+            aria-pressed={active}
+            onClick={() => onChange(token)}
+            className="group p-1.5 focus-visible:outline-none"
+          >
+            <span
+              className={cn(
+                'flex size-16 items-center justify-center rounded-full border-2 border-foreground text-xs font-semibold transition-colors group-focus-visible:ring-2 group-focus-visible:ring-ring',
+                active
+                  ? 'bg-foreground text-background'
+                  : 'border-dashed bg-card text-foreground group-hover:border-solid',
+              )}
+            >
+              {token.symbol}
+            </span>
+          </button>
+        );
+      })}
+    </fieldset>
   );
 }
 

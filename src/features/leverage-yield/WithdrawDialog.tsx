@@ -118,20 +118,18 @@ export function WithdrawDialog({
               onChange={e => setAmountText(e.target.value)}
             />
           </Field>
-          <div className="grid grid-cols-2 gap-3">
-            <Field label="To network">
-              <ChainSelect
-                value={dstChain}
-                onChange={chain => {
-                  setDstChain(chain);
-                  setToken(getTokenByKey(chain, DEFAULT_TOKEN_KEY));
-                }}
-              />
-            </Field>
-            <Field label="Token">
-              <TokenSelect chainKey={dstChain} value={token} onChange={setToken} />
-            </Field>
-          </div>
+          <Field label="To network">
+            <ChainSelect
+              value={dstChain}
+              onChange={chain => {
+                setDstChain(chain);
+                setToken(getTokenByKey(chain, DEFAULT_TOKEN_KEY));
+              }}
+            />
+          </Field>
+          <Field label="Token">
+            <TokenSelect chainKey={dstChain} value={token} onChange={setToken} />
+          </Field>
           <div className="flex flex-col gap-2 rounded-md border bg-secondary p-3">
             <Row label="You receive (est.)" strong value={quote.hasPayload ? fmtOut(quote.quoted) : '–'} />
             <Row

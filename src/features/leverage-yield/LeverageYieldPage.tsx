@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { NextPrompt } from '@/components/workshop/NextPrompt';
 import { DEFAULT_SOURCE_CHAIN, DEFAULT_VAULT_NAME, type SourceChainKey } from '@/config/workshop';
 import { useEvmWallet } from '@/wallet';
 import { DepositPanel } from './DepositPanel';
@@ -26,7 +25,6 @@ export function LeverageYieldPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <NextPrompt next="done" />
       <section className="flex flex-col gap-3">
         <h2 className="text-xl font-semibold">Vaults</h2>
         <div
@@ -50,13 +48,7 @@ export function LeverageYieldPage() {
         </div>
       </section>
       <div className="w-full">
-        <DepositPanel
-          vaults={vaults}
-          vault={vault}
-          onVaultChange={v => setVaultName(v.name)}
-          srcChain={srcChain}
-          onSrcChainChange={setSrcChain}
-        />
+        <DepositPanel vault={vault} srcChain={srcChain} onSrcChainChange={setSrcChain} />
       </div>
       {withdrawVault && (
         <WithdrawDialog vault={withdrawVault} open onOpenChange={open => !open && setWithdrawName(undefined)} />

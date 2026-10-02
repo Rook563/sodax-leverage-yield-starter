@@ -2,9 +2,8 @@ import type { LeverageYieldVault, XToken } from '@sodax/types';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   DEFAULT_SLIPPAGE_BPS,
   DEFAULT_TOKEN_KEY,
@@ -20,15 +19,11 @@ import { errorMessage, isNativeToken, SHARE_DECIMALS } from './lib';
 import { ChainSelect, Field, FlowSteps, Row, TokenSelect } from './parts';
 
 export function DepositPanel({
-  vaults,
   vault,
-  onVaultChange,
   srcChain,
   onSrcChainChange,
 }: {
-  vaults: readonly LeverageYieldVault[];
   vault: LeverageYieldVault;
-  onVaultChange: (vault: LeverageYieldVault) => void;
   srcChain: SourceChainKey;
   onSrcChainChange: (chain: SourceChainKey) => void;
 }) {
@@ -79,50 +74,20 @@ export function DepositPanel({
 
   return (
     <Card id="deposit">
-      <CardHeader>
-        <CardTitle>Deposit</CardTitle>
-        <CardDescription>
-          Pay from any supported network. Shares land in your SODAX hub wallet on Sonic.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <Field label="Vault">
-          <Select
-            value={vault.name}
-            disabled={busy}
-            onValueChange={name => {
-              const next = vaults.find(v => v.name === name);
-              if (next) onVaultChange(next);
+      <CardContent className="flex flex-col gap-4 pt-6">
+        <Field label="From network">
+          <ChainSelect value={srcChain} onChange={changeChain} />
+        </Field>
+        <Field label="Token">
+          <TokenSelect
+            chainKey={srcChain}
+            value={token}
+            onChange={t => {
+              setToken(t);
               flow.reset();
             }}
-          >
-            <SelectTrigger aria-label="Vault">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {vaults.map(v => (
-                <SelectItem key={v.name} value={v.name}>
-                  {v.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          />
         </Field>
-        <div className="grid grid-cols-2 gap-3">
-          <Field label="From network">
-            <ChainSelect value={srcChain} onChange={changeChain} />
-          </Field>
-          <Field label="Token">
-            <TokenSelect
-              chainKey={srcChain}
-              value={token}
-              onChange={t => {
-                setToken(t);
-                flow.reset();
-              }}
-            />
-          </Field>
-        </div>
         <Field
           label="Amount"
           hint={
