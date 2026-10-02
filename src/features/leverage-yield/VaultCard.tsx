@@ -121,17 +121,18 @@ export function VaultCard({
         >
           Deposit
         </Button>
-        <Button
-          className="flex-1"
-          variant="outline"
-          onClick={e => {
-            e.stopPropagation();
-            onWithdraw();
-          }}
-          disabled={holdings.total === 0n}
-        >
-          Withdraw
-        </Button>
+        {holdings.total > 0n && (
+          <Button
+            className="flex-1"
+            variant="outline"
+            onClick={e => {
+              e.stopPropagation();
+              onWithdraw();
+            }}
+          >
+            Withdraw
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );
