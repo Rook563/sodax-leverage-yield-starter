@@ -131,7 +131,7 @@ function PromptBox({ prompt }: { prompt: string }) {
   };
 
   return (
-    <div className="relative rounded-md border bg-muted/50 p-4 sm:pr-28">
+    <div className="relative rounded-md border bg-muted p-4 sm:pr-28">
       <p className="font-mono text-xs leading-relaxed">{prompt}</p>
       <Button
         variant="outline"

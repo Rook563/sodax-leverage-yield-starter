@@ -132,7 +132,7 @@ export function WithdrawDialog({
               <TokenSelect chainKey={dstChain} value={token} onChange={setToken} />
             </Field>
           </div>
-          <div className="flex flex-col gap-2 rounded-md border bg-secondary/40 p-3">
+          <div className="flex flex-col gap-2 rounded-md border bg-secondary p-3">
             <Row label="You receive (est.)" strong value={quote.hasPayload ? fmtOut(quote.quoted) : '–'} />
             <Row
               label={`Minimum (${formatBps(DEFAULT_SLIPPAGE_BPS)} slippage)`}

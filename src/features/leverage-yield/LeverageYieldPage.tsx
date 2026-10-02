@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { NextPrompt } from '@/components/workshop/NextPrompt';
 import { DEFAULT_SOURCE_CHAIN, DEFAULT_VAULT_NAME, type SourceChainKey } from '@/config/workshop';
 import { useEvmWallet } from '@/wallet';
@@ -16,39 +16,47 @@ export function LeverageYieldPage() {
   const vault = vaults.find(v => v.name === vaultName) ?? vaults[0];
   const withdrawVault = vaults.find(v => v.name === withdrawName);
 
+  const ordered = useMemo(() => (vault ? [vault, ...vaults.filter(v => v !== vault)] : vaults), [vault, vaults]);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (vaultName) sliderRef.current?.scrollTo({ left: 0, behavior: 'smooth' });
+  }, [vaultName]);
+
   if (!vault) return null;
 
   return (
     <div className="flex flex-col gap-6">
       <NextPrompt next="done" />
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start">
-        <section className="flex flex-col gap-4">
-          <h2 className="text-xl font-semibold">Vaults</h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {vaults.map(v => (
-              <VaultCard
-                key={v.name}
-                vault={v}
-                address={address}
-                selected={v.name === vault.name}
-                onDeposit={() => {
-                  setVaultName(v.name);
-                  document.getElementById('deposit')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }}
-                onWithdraw={() => setWithdrawName(v.name)}
-              />
-            ))}
-          </div>
-        </section>
-        <div className="lg:sticky lg:top-6">
-          <DepositPanel
-            vaults={vaults}
-            vault={vault}
-            onVaultChange={v => setVaultName(v.name)}
-            srcChain={srcChain}
-            onSrcChainChange={setSrcChain}
-          />
+      <section className="flex flex-col gap-3">
+        <h2 className="text-xl font-semibold">Vaults</h2>
+        <div
+          ref={sliderRef}
+          className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 sm:-mx-6 sm:px-6"
+        >
+          {ordered.map(v => (
+            <VaultCard
+              key={v.name}
+              vault={v}
+              address={address}
+              selected={v.name === vault.name}
+              onSelect={() => setVaultName(v.name)}
+              onDeposit={() => {
+                setVaultName(v.name);
+                document.getElementById('deposit')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+              onWithdraw={() => setWithdrawName(v.name)}
+            />
+          ))}
         </div>
+      </section>
+      <div className="w-full">
+        <DepositPanel
+          vaults={vaults}
+          vault={vault}
+          onVaultChange={v => setVaultName(v.name)}
+          srcChain={srcChain}
+          onSrcChainChange={setSrcChain}
+        />
       </div>
       {withdrawVault && (
         <WithdrawDialog vault={withdrawVault} open onOpenChange={open => !open && setWithdrawName(undefined)} />

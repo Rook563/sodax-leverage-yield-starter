@@ -22,12 +22,14 @@ export function VaultCard({
   vault,
   address,
   selected,
+  onSelect,
   onDeposit,
   onWithdraw,
 }: {
   vault: LeverageYieldVault;
   address: string | undefined;
   selected: boolean;
+  onSelect: () => void;
   onDeposit: () => void;
   onWithdraw: () => void;
 }) {
@@ -45,7 +47,14 @@ export function VaultCard({
   const aprValue = apr.data?.effectiveNetAprRay;
 
   return (
-    <Card className={cn('flex flex-col transition-shadow', selected && 'ring-2 ring-primary')}>
+    <Card
+      aria-current={selected || undefined}
+      onClick={onSelect}
+      className={cn(
+        'flex w-[280px] shrink-0 cursor-pointer snap-start flex-col transition-colors sm:w-[300px]',
+        selected ? 'theme-inverted' : 'border-dashed',
+      )}
+    >
       <CardHeader className="gap-2">
         <div className="flex items-center justify-between gap-2">
           <CardTitle className="text-lg">{vault.name}</CardTitle>
@@ -88,7 +97,7 @@ export function VaultCard({
           <Row label="Leverage" value={leverageWad !== undefined ? `${formatWad(leverageWad)}×` : '–'} />
           <Row label="Health factor" value={health ?? '–'} />
         </div>
-        <div className="rounded-md bg-secondary px-3 py-2.5">
+        <div className="rounded-md border px-3 py-2.5">
           <Row
             label="Your shares"
             strong
@@ -103,10 +112,24 @@ export function VaultCard({
         </div>
       </CardContent>
       <CardFooter className="gap-2">
-        <Button className="flex-1" onClick={onDeposit}>
+        <Button
+          className="flex-1"
+          onClick={e => {
+            e.stopPropagation();
+            onDeposit();
+          }}
+        >
           Deposit
         </Button>
-        <Button className="flex-1" variant="outline" onClick={onWithdraw} disabled={holdings.total === 0n}>
+        <Button
+          className="flex-1"
+          variant="outline"
+          onClick={e => {
+            e.stopPropagation();
+            onWithdraw();
+          }}
+          disabled={holdings.total === 0n}
+        >
           Withdraw
         </Button>
       </CardFooter>

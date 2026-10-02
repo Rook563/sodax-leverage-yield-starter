@@ -5,52 +5,71 @@
  * that read these variables. To whitelabel, change the values below (and src/brand/brand.config.ts,
  * public/brand/*). Nothing else needs to change.
  *
- * Defaults: SODAX brand tokens.
- * Warm cherry + cream palette. Yellow is an accent only, never a surface. Buttons are pills.
+ * Pure black and white: every color token is #000000 or #ffffff.
  */
 :root {
   /* Surfaces */
-  --background: #f9f7f5; /* vibrant-white */
-  --foreground: #483434; /* espresso */
+  --background: #ffffff;
+  --foreground: #000000;
   --card: #ffffff;
-  --card-foreground: #483434;
+  --card-foreground: #000000;
   --popover: #ffffff;
-  --popover-foreground: #483434;
+  --popover-foreground: #000000;
 
   /* Brand */
-  --primary: #a55c55; /* cherry-soda */
-  --primary-hover: #964d48; /* cherry-dark */
+  --primary: #000000;
+  --primary-hover: #000000;
   --primary-foreground: #ffffff;
-  --secondary: #f8f3f3; /* almost-white */
-  --secondary-foreground: #a55c55;
-  --accent: #ffd92f; /* yellow-soda: accents on primary surfaces only */
-  --accent-foreground: #964d48;
+  --secondary: #ffffff;
+  --secondary-foreground: #000000;
+  --accent: #ffffff;
+  --accent-foreground: #000000;
 
   /* Neutrals */
-  --muted: #f0eaeb; /* light-cream */
-  --muted-foreground: #6b5c5b; /* clay-dark */
-  --subtle-foreground: #8e7e7d; /* clay */
-  --border: #e5d5d4; /* cream-cherry */
-  --input: #e5d5d4;
-  --ring: #cc9e9a; /* cherry-bright */
+  --muted: #ffffff;
+  --muted-foreground: #000000;
+  --subtle-foreground: #000000;
+  --border: #000000;
+  --input: #000000;
+  --ring: #000000;
 
   /* Hero band (primary surface with light text) */
-  --hero: #a55c55;
+  --hero: #000000;
   --hero-foreground: #ffffff;
-  --hero-muted: #e3bebb; /* cherry-brighter */
-  --hero-accent: #ffd92f;
+  --hero-muted: #ffffff;
+  --hero-accent: #ffffff;
 
   /* Status */
-  --destructive: #ce4446;
+  --destructive: #000000;
   --destructive-foreground: #ffffff;
-  --destructive-muted: #faecec;
-  --success: #089541;
-  --success-muted: #e6f8ec;
-  --notice: #ede6e6; /* cream-white: callouts with a primary left border */
+  --destructive-muted: #ffffff;
+  --success: #000000;
+  --success-muted: #ffffff;
+  --notice: #ffffff;
 
   /* Shape and type */
   --radius: 16px;
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Inria Serif", ui-serif, Georgia, serif;
   --font-accent: "Shrikhand", cursive;
+}
+
+/* Inverted surface for the active vault card: same tokens, black and white swapped. */
+.theme-inverted {
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #000000;
+  --card-foreground: #ffffff;
+  --primary: #ffffff;
+  --primary-hover: #ffffff;
+  --primary-foreground: #000000;
+  --secondary: #000000;
+  --secondary-foreground: #ffffff;
+  --muted: #000000;
+  --muted-foreground: #ffffff;
+  --subtle-foreground: #ffffff;
+  --border: #ffffff;
+  --input: #ffffff;
+  --ring: #ffffff;
+  --destructive: #ffffff;
 }
