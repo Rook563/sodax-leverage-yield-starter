@@ -89,46 +89,51 @@ export function DepositPanel({
         </Field>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
           <div className="min-w-0 flex-1">
-            <Field
-              label="Amount"
-              hint={
-                wallet.address && token ? (
-                  <button
-                    type="button"
-                    className="hover:text-foreground"
-                    onClick={() => spendable !== undefined && setAmountText(formatPlain(spendable, token.decimals))}
-                  >
-                    Balance {formatTokenAmount(balance, token.decimals)} {token.symbol}
-                  </button>
-                ) : undefined
-              }
-            >
-              <Input
-                inputMode="decimal"
-                placeholder="0.00"
-                aria-label={`Amount in ${token?.symbol ?? 'tokens'}`}
-                className="h-24 px-5 text-5xl font-semibold tabular-nums"
-                value={amountText}
-                disabled={busy}
-                onChange={e => {
-                  setAmountText(e.target.value);
-                  if (flow.state.step === 'done' || flow.state.step === 'error') flow.reset();
-                }}
-              />
+            <Field label="Amount">
+              <div className="group/amount relative">
+                <Input
+                  inputMode="decimal"
+                  placeholder="0.00"
+                  aria-label={`Amount in ${token?.symbol ?? 'tokens'}`}
+                  className="h-24 pr-48 pl-5 text-5xl font-semibold tabular-nums"
+                  value={amountText}
+                  disabled={busy}
+                  onChange={e => {
+                    setAmountText(e.target.value);
+                    if (flow.state.step === 'done' || flow.state.step === 'error') flow.reset();
+                  }}
+                />
+                {wallet.address && token && (
+                  <div className="absolute inset-y-0 right-4 flex items-center gap-3">
+                    <span className="text-sm text-muted-foreground">
+                      Balance {formatTokenAmount(balance, token.decimals)} {token.symbol}
+                    </span>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled={busy || !spendable}
+                      onClick={() => spendable !== undefined && setAmountText(formatPlain(spendable, token.decimals))}
+                      className="transition-opacity pointer-fine:opacity-0 pointer-fine:group-focus-within/amount:opacity-100 pointer-fine:group-hover/amount:opacity-100"
+                    >
+                      Max
+                    </Button>
+                  </div>
+                )}
+              </div>
             </Field>
           </div>
           {!wallet.isConnected ? (
-            <Button size="lg" className="h-24 shrink-0 px-8 sm:w-64" onClick={wallet.connect}>
+            <Button size="lg" className="h-24 shrink-0 px-8 sm:w-80" onClick={wallet.connect}>
               Connect wallet
             </Button>
           ) : wallet.isWrongChain ? (
-            <Button size="lg" className="h-24 shrink-0 px-8 sm:w-64" onClick={wallet.switchChain}>
+            <Button size="lg" className="h-24 shrink-0 px-8 sm:w-80" onClick={wallet.switchChain}>
               Switch to {chainName(srcChain)}
             </Button>
           ) : (
             <Button
               size="lg"
-              className="h-24 shrink-0 px-8 sm:w-64"
+              className="h-24 shrink-0 px-8 sm:w-80"
               disabled={busy || !quote.minimum || quote.isFetching || overBalance || !amount}
               onClick={submit}
             >
