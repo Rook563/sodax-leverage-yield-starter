@@ -25,8 +25,7 @@ export function LeverageYieldPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <section className="flex flex-col gap-3">
-        <h2 className="text-xl font-semibold">Vaults</h2>
+      <section aria-label="Vaults" className="flex flex-col gap-3">
         <div
           ref={sliderRef}
           className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pt-2 pb-3 sm:-mx-6 sm:px-6"
