@@ -74,7 +74,7 @@ export function DepositPanel({
   return (
     <Card id="deposit">
       <CardContent className="flex flex-col gap-4 pt-6">
-        <Field label="From network">
+        <Field label={`From ${chainName(srcChain)}`}>
           <ChainSelect value={srcChain} onChange={changeChain} />
         </Field>
         <Field label="Token">

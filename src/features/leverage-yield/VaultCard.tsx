@@ -51,7 +51,7 @@ export function VaultCard({
       aria-current={selected || undefined}
       onClick={onSelect}
       className={cn(
-        'flex w-[280px] shrink-0 cursor-pointer snap-start flex-col transition-colors sm:w-[300px]',
+        'group flex w-[280px] shrink-0 cursor-pointer snap-start flex-col transition-[translate,background-color] duration-200 hover:-translate-y-1.5 focus-within:-translate-y-1.5 sm:w-[300px]',
         selected ? 'theme-inverted' : 'border-dashed',
       )}
     >
@@ -69,11 +69,11 @@ export function VaultCard({
         <div>
           <div className="text-xs uppercase tracking-wide text-muted-foreground">Net APR</div>
           {apr.isLoading ? (
-            <Skeleton className="mt-1 h-9 w-28" />
+            <Skeleton className="mt-1 h-15 w-40" />
           ) : (
             <div
               className={cn(
-                'text-3xl font-semibold tabular-nums',
+                'text-6xl font-semibold leading-none tracking-tight tabular-nums',
                 aprValue !== undefined && aprValue < 0n && 'text-destructive',
               )}
             >
@@ -81,7 +81,7 @@ export function VaultCard({
             </div>
           )}
         </div>
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5 transition-opacity duration-200 pointer-fine:opacity-0 pointer-fine:group-hover:opacity-100 pointer-fine:group-focus-within:opacity-100">
           <Row
             label="TVL"
             value={tvl.data !== undefined ? `${formatTokenAmount(tvl.data, asset.decimals, 2)} ${asset.symbol}` : '–'}

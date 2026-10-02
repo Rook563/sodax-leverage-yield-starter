@@ -118,7 +118,7 @@ export function WithdrawDialog({
               onChange={e => setAmountText(e.target.value)}
             />
           </Field>
-          <Field label="To network">
+          <Field label={`To ${chainName(dstChain)}`}>
             <ChainSelect
               value={dstChain}
               onChange={chain => {
