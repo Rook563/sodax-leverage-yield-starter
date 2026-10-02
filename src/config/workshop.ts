@@ -17,7 +17,7 @@ export const SOURCE_CHAINS = [
 
 export type SourceChainKey = (typeof SOURCE_CHAINS)[number];
 
-export const DEFAULT_SOURCE_CHAIN: SourceChainKey = ChainKeys.BASE_MAINNET;
+export const DEFAULT_SOURCE_CHAIN: SourceChainKey = ChainKeys.SONIC_MAINNET;
 
 /** Native token (ETH / S) to leave in the wallet for gas when depositing the native token itself. */
 export const NATIVE_GAS_RESERVE: Record<SourceChainKey, bigint> = {
