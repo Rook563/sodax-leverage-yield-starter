@@ -8,13 +8,15 @@ import { cn } from '@/lib/utils';
 import type { FlowState } from './hooks';
 import { errorMessage } from './lib';
 
-export function Field({ label, children, hint }: { label: string; children: ReactNode; hint?: ReactNode }) {
+export function Field({ label, children, hint }: { label?: string; children: ReactNode; hint?: ReactNode }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <div className="flex items-baseline justify-between gap-2 text-sm">
-        <span className="font-medium">{label}</span>
-        {hint && <span className="text-xs text-muted-foreground">{hint}</span>}
-      </div>
+      {(label || hint) && (
+        <div className="flex items-baseline justify-between gap-2 text-sm">
+          <span className="font-medium">{label}</span>
+          {hint && <span className="text-xs text-muted-foreground">{hint}</span>}
+        </div>
+      )}
       {children}
     </div>
   );

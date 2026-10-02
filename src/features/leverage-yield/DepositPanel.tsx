@@ -2,6 +2,7 @@ import type { LeverageYieldVault, XToken } from '@sodax/types';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import {
   DEFAULT_SLIPPAGE_BPS,
@@ -77,7 +78,7 @@ export function DepositPanel({
         <Field label={`From ${chainName(srcChain)}`}>
           <ChainSelect value={srcChain} onChange={changeChain} />
         </Field>
-        <Field label="Token">
+        <Field>
           <TokenSelect
             chainKey={srcChain}
             value={token}
@@ -89,7 +90,7 @@ export function DepositPanel({
         </Field>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
           <div className="min-w-0 flex-1">
-            <Field label="Amount">
+            <Field>
               <div className="group/amount relative">
                 <Input
                   inputMode="decimal"
@@ -166,14 +167,32 @@ export function DepositPanel({
           Leveraged vault: APR can turn negative and the share price can fall.
         </p>
 
-        {showFlow && (
-          <FlowSteps
-            state={flow.state}
-            chainKey={srcChain}
-            needsApproval={flow.state.step === 'approving' || !!flow.state.approveTxHash}
-            doneLabel={`Shares received: ${formatTokenAmount(holdings.total, SHARE_DECIMALS)} ${vault.name}`}
-          />
-        )}
+        <Dialog open={showFlow} onOpenChange={open => !open && !busy && flow.reset()}>
+          <DialogContent
+            onInteractOutside={e => busy && e.preventDefault()}
+            onEscapeKeyDown={e => busy && e.preventDefault()}
+          >
+            <DialogHeader>
+              <DialogTitle>
+                Depositing {amountText} {token?.symbol} into {vault.name}
+              </DialogTitle>
+              <DialogDescription>Keep this open until the shares arrive, usually under 2 minutes.</DialogDescription>
+            </DialogHeader>
+            <FlowSteps
+              state={flow.state}
+              chainKey={srcChain}
+              needsApproval={flow.state.step === 'approving' || !!flow.state.approveTxHash}
+              doneLabel={
+                flow.state.step === 'done'
+                  ? `Shares received. You now hold ${formatTokenAmount(holdings.total, SHARE_DECIMALS)} ${vault.name}`
+                  : 'Shares arrive in your hub wallet'
+              }
+            />
+            {(flow.state.step === 'done' || flow.state.step === 'error') && (
+              <Button onClick={flow.reset}>{flow.state.step === 'done' ? 'Done' : 'Close'}</Button>
+            )}
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );
